@@ -1,0 +1,62 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Logs
+*.log
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Rider
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Publish output
+publish/
+
+# Test results
+TestResults/
+
+# NuGet
+*.nupkg
+packages/
+
+# VS temporary files
+*.tmp
+*.temp
+
+# Coverage reports
+coverage/
+
+# Node modules (caso tenha frontend no futuro)
+node_modules/
+
+# Backup files
+*.bak
+
+# Dotnet tools
+.dotnet/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
