@@ -13,10 +13,13 @@ public class InventoryController : ControllerBase
         _inventoryService = inventoryService;
     }
 
-    [HttpPost]
+    [HttpPost("analyze")]
     public async Task<IActionResult> Analyze(IFormFile file)
     {
-        if (file == null || file.Length == 0)
+        if (!IsCsvFile(file))
+            return BadRequest("Only CSV files are allowed.");
+
+        else if (file == null || file.Length == 0)
             return BadRequest("Invalid CSV file.");
 
         var records = await _parser.ParseAsync(file);
@@ -24,5 +27,12 @@ public class InventoryController : ControllerBase
         var result = _inventoryService.Analyze(records);
 
         return Ok(result);
+    }
+
+    private bool IsCsvFile(IFormFile file)
+    {
+        var extension = Path.GetExtension(file.FileName);
+
+        return extension.Equals(".csv", StringComparison.OrdinalIgnoreCase);
     }
 }
