@@ -1,3 +1,5 @@
+namespace InventoryAnalyzerAPI.DTOs;
+
 public class StockItemDto
 {
     public string? ProductId { get; set; }

@@ -1,3 +1,7 @@
+using InventoryAnalyzerAPI.Enums;
+
+namespace InventoryAnalyzerAPI.DTOs;
+
 public class InventoryRecordDto
 {
     public long Timestamp { get; set; }
