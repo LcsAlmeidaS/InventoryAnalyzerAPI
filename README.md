@@ -75,7 +75,7 @@ InventoryAnalyzerAPI/
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/InventoryAnalyzerAPI.git
+git clone https://github.com/LcsAlmeidaS/InventoryAnalyzerAPI.git
 cd InventoryAnalyzerAPI
 
 # Restaure as dependências
