@@ -1,21 +1,26 @@
-public class InventoryService
+using InventoryAnalyzerAPI.DTOs;
+using InventoryAnalyzerAPI.Enums;
+using InventoryAnalyzerAPI.Services.Interfaces;
+
+namespace InventoryAnalyzerAPI.Services;
+
+public class InventoryService : IInventoryService
 {
     private static readonly Dictionary<MovementType, int> MovementFactor = new()
-{
-    { MovementType.In, 1 },
-    { MovementType.Out, -1 }
-};
+    {
+        { MovementType.In, 1 },
+        { MovementType.Out, -1 }
+    };
 
     public InventoryAnalysisResultDto Analyze(IEnumerable<InventoryRecordDto> records)
     {
         var stock = new Dictionary<string, int>();
         var names = new Dictionary<string, string>();
-        var anomalies = new HashSet<string>();
+        var anomalies = new Dictionary<string, int>();
 
         foreach (var record in records.OrderBy(r => r.Timestamp))
         {
             names[record.ProductId!] = record.ProductName ?? "";
-
             stock.TryAdd(record.ProductId!, 0);
 
             if (!MovementFactor.TryGetValue(record.Type, out var factor))
@@ -24,17 +29,20 @@ public class InventoryService
             stock[record.ProductId!] += factor * record.Quantity;
 
             if (stock[record.ProductId!] < 0)
-                anomalies.Add(record.ProductId!);
+            {
+                var current = stock[record.ProductId!];
+                if (!anomalies.TryGetValue(record.ProductId!, out var min) || current < min)
+                    anomalies[record.ProductId!] = current;
+            }
         }
 
         return BuildResult(stock, names, anomalies);
     }
 
-
-    private InventoryAnalysisResultDto BuildResult(
-    Dictionary<string, int> stock,
-    Dictionary<string, string> names,
-    HashSet<string> anomalies)
+    private static InventoryAnalysisResultDto BuildResult(
+        Dictionary<string, int> stock,
+        Dictionary<string, string> names,
+        Dictionary<string, int> anomalies)
     {
         var result = new InventoryAnalysisResultDto();
 
@@ -48,13 +56,13 @@ public class InventoryService
             });
         }
 
-        foreach (var id in anomalies)
+        foreach (var (id, minStock) in anomalies)
         {
             result.Anomalies.Add(new AnomalyDto
             {
                 ProductId = id,
                 ProductName = names[id],
-                Message = "Stock went negative"
+                Message = $"Stock went negative (reached {minStock})"
             });
         }
 
