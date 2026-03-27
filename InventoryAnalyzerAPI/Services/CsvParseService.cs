@@ -1,41 +1,44 @@
-public class CsvParseService
+using CsvHelper;
+using CsvHelper.Configuration;
+using InventoryAnalyzerAPI.DTOs;
+using InventoryAnalyzerAPI.Enums;
+using InventoryAnalyzerAPI.Services.Interfaces;
+using System.Globalization;
+
+namespace InventoryAnalyzerAPI.Services;
+
+public class CsvParseService : ICsvParseService
 {
     public async Task<List<InventoryRecordDto>> ParseAsync(IFormFile file)
     {
         var records = new List<InventoryRecordDto>();
 
-        using var reader = new StreamReader(file.OpenReadStream());
-
-        bool isHeader = true;
-
-        while (!reader.EndOfStream)
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            var line = await reader.ReadLineAsync();
+            HasHeaderRecord = true,
+            MissingFieldFound = null,
+            BadDataFound = null,
+        };
 
-            if (isHeader)
-            {
-                isHeader = false;
-                continue;
-            }
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+        using var csv = new CsvReader(reader, config);
 
-            if (string.IsNullOrWhiteSpace(line))
-                continue;
+        await csv.ReadAsync();
+        csv.ReadHeader();
 
-            var columns = line.Split(',');
-
-            if (columns.Length != 5)
-                continue;
-
-            if (!long.TryParse(columns[0], out var timestamp))
+        while (await csv.ReadAsync())
+        {
+            if (!long.TryParse(csv.GetField(0), out var timestamp))
                 continue;
 
-            var productId = columns[1];
-            var productName = columns[2];
+            var productId = csv.GetField(1);
+            var productName = csv.GetField(2);
 
-            if (!Enum.TryParse<MovementType>(columns[3], true, out var type))
+            if (!Enum.TryParse<MovementType>(csv.GetField(3), true, out var type))
                 continue;
 
-            if (!int.TryParse(columns[4], out var quantity))
+            if (!int.TryParse(csv.GetField(4), out var quantity))
                 continue;
 
             records.Add(new InventoryRecordDto
