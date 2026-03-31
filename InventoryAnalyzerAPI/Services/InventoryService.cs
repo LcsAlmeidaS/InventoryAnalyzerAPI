@@ -20,23 +20,47 @@ public class InventoryService : IInventoryService
 
         foreach (var record in records.OrderBy(r => r.Timestamp))
         {
-            names[record.ProductId!] = record.ProductName ?? "";
-            stock.TryAdd(record.ProductId!, 0);
-
-            if (!MovementFactor.TryGetValue(record.Type, out var factor))
-                continue;
-
-            stock[record.ProductId!] += factor * record.Quantity;
-
-            if (stock[record.ProductId!] < 0)
-            {
-                var current = stock[record.ProductId!];
-                if (!anomalies.TryGetValue(record.ProductId!, out var min) || current < min)
-                    anomalies[record.ProductId!] = current;
-            }
+            RegisterProduct(record, stock, names);
+            ApplyMovement(record, stock, anomalies);
         }
 
         return BuildResult(stock, names, anomalies);
+    }
+
+    private static void RegisterProduct(
+        InventoryRecordDto record,
+        Dictionary<string, int> stock,
+        Dictionary<string, string> names)
+    {
+        names[record.ProductId!] = record.ProductName ?? "";
+        stock.TryAdd(record.ProductId!, 0);
+    }
+
+    private static void ApplyMovement(
+        InventoryRecordDto record,
+        Dictionary<string, int> stock,
+        Dictionary<string, int> anomalies)
+    {
+        if (!MovementFactor.TryGetValue(record.Type, out var factor))
+            return;
+
+        stock[record.ProductId!] += factor * record.Quantity;
+
+        CheckAnomaly(record.ProductId!, stock, anomalies);
+    }
+
+    private static void CheckAnomaly(
+        string productId,
+        Dictionary<string, int> stock,
+        Dictionary<string, int> anomalies)
+    {
+        if (stock[productId] >= 0)
+            return;
+
+        var current = stock[productId];
+
+        if (!anomalies.TryGetValue(productId, out var min) || current < min)
+            anomalies[productId] = current;
     }
 
     private static InventoryAnalysisResultDto BuildResult(
@@ -47,25 +71,37 @@ public class InventoryService : IInventoryService
         var result = new InventoryAnalysisResultDto();
 
         foreach (var item in stock)
-        {
-            result.Stock.Add(new StockItemDto
-            {
-                ProductId = item.Key,
-                ProductName = names[item.Key],
-                Quantity = item.Value
-            });
-        }
+            result.Stock.Add(MapToStockItem(item.Key, item.Value, names));
 
         foreach (var (id, minStock) in anomalies)
-        {
-            result.Anomalies.Add(new AnomalyDto
-            {
-                ProductId = id,
-                ProductName = names[id],
-                Message = $"Stock went negative (reached {minStock})"
-            });
-        }
+            result.Anomalies.Add(MapToAnomaly(id, minStock, names));
 
         return result;
+    }
+
+    private static StockItemDto MapToStockItem(
+        string productId,
+        int quantity,
+        Dictionary<string, string> names)
+    {
+        return new StockItemDto
+        {
+            ProductId = productId,
+            ProductName = names[productId],
+            Quantity = quantity
+        };
+    }
+
+    private static AnomalyDto MapToAnomaly(
+        string productId,
+        int minStock,
+        Dictionary<string, string> names)
+    {
+        return new AnomalyDto
+        {
+            ProductId = productId,
+            ProductName = names[productId],
+            Message = $"Stock went negative (reached {minStock})"
+        };
     }
 }
