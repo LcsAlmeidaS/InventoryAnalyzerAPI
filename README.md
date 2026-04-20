@@ -1,6 +1,6 @@
 # InventoryAnalyzerAPI
 
-Uma API RESTful desenvolvida com **ASP.NET Core** para análise de movimentações de estoque a partir de arquivos CSV. A API processa entradas e saídas de produtos, calcula o estoque atual por produto e detecta anomalias como ocorrências de estoque negativo.
+Uma API RESTful desenvolvida com **ASP.NET Core** para análise de movimentações de estoque a partir de arquivos CSV, com frontend em **React** para visualização dos resultados. A API processa entradas e saídas de produtos, calcula o estoque atual por produto e detecta anomalias como ocorrências de estoque negativo.
 
 ---
 
@@ -26,10 +26,14 @@ Uma API RESTful desenvolvida com **ASP.NET Core** para análise de movimentaçõ
 - Informa o menor nível de estoque atingido quando uma anomalia ocorre
 - Validação de tipo e tamanho do arquivo antes do processamento
 - Swagger UI disponível no ambiente de desenvolvimento
+- Interface web com dark mode para visualização dos resultados
+- Suporte a drag and drop para upload do arquivo CSV
 
 ---
 
 ## 🛠 Tecnologias
+
+### Backend
 
 | Tecnologia | Versão |
 |---|---|
@@ -38,29 +42,59 @@ Uma API RESTful desenvolvida com **ASP.NET Core** para análise de movimentaçõ
 | CsvHelper | 33.0.1 |
 | Swashbuckle (Swagger) | 6.6.2 |
 
+### Frontend
+
+| Tecnologia | Versão |
+|---|---|
+| React | 18.3.1 |
+| TypeScript | 5.2.2 |
+| Vite | 5.3.1 |
+| Axios | 1.7.2 |
+
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
 InventoryAnalyzerAPI/
-├── Controllers/
-│   └── InventoryController.cs       # Gerencia as requisições HTTP
-├── DTOs/
-│   ├── AnomalyDto.cs                # Modelo de resposta de anomalia
-│   ├── InventoryAnalysisResultDto.cs # Modelo completo do resultado da análise
-│   ├── InventoryRecordDto.cs        # Modelo de linha do CSV parseada
-│   └── StockItemDto.cs              # Modelo de item de estoque
-├── Enums/
-│   └── MovementType.cs              # Tipos de movimentação: In / Out
-├── Services/
-│   ├── Interfaces/
-│   │   ├── ICsvParseService.cs      # Contrato do serviço de parse de CSV
-│   │   └── IInventoryService.cs    # Contrato do serviço de análise
-│   ├── CsvParseService.cs          # Implementação do parse de CSV
-│   └── InventoryService.cs         # Lógica de análise de estoque
-├── Program.cs                       # Bootstrap da aplicação e configuração de DI
-└── appsettings.json
+├── InventoryAnalyzerAPI/                        # Projeto backend
+│   ├── Controllers/
+│   │   └── InventoryController.cs               # Gerencia as requisições HTTP
+│   ├── DTOs/
+│   │   ├── AnomalyDto.cs                        # Modelo de resposta de anomalia
+│   │   ├── InventoryAnalysisResultDto.cs         # Modelo completo do resultado da análise
+│   │   ├── InventoryRecordDto.cs                 # Modelo de linha do CSV parseada
+│   │   └── StockItemDto.cs                       # Modelo de item de estoque
+│   ├── Enums/
+│   │   └── MovementType.cs                       # Tipos de movimentação: In / Out
+│   ├── Services/
+│   │   ├── Interfaces/
+│   │   │   ├── ICsvParseService.cs               # Contrato do serviço de parse de CSV
+│   │   │   └── IInventoryService.cs              # Contrato do serviço de análise
+│   │   ├── CsvParseService.cs                    # Implementação do parse de CSV
+│   │   └── InventoryService.cs                   # Lógica de análise de estoque
+│   ├── Program.cs                                # Bootstrap da aplicação e configuração de DI
+│   └── appsettings.json
+│
+└── InventoryAnalyzerWeb/                         # Projeto frontend
+    ├── src/
+    │   ├── components/
+    │   │   ├── UploadZone.tsx                    # Área de drag and drop do CSV
+    │   │   ├── StockTable.tsx                    # Tabela com estoque atual
+    │   │   └── AnomaliesList.tsx                 # Lista de anomalias detectadas
+    │   ├── pages/
+    │   │   └── HomePage.tsx                      # Página principal com toda a lógica
+    │   ├── services/
+    │   │   └── inventoryService.ts               # Chamada para a API com Axios
+    │   ├── types/
+    │   │   └── index.ts                          # Tipos TypeScript espelhando os DTOs do backend
+    │   ├── App.tsx
+    │   ├── main.tsx
+    │   └── index.css                             # Tema dark com CSS variables
+    ├── index.html
+    ├── package.json
+    ├── vite.config.ts                            # Proxy configurado para o backend
+    └── tsconfig.json
 ```
 
 ---
@@ -70,24 +104,41 @@ InventoryAnalyzerAPI/
 ### Pré-requisitos
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- [Node.js 18+](https://nodejs.org)
 
-### Executando localmente
+### Backend
 
 ```bash
 # Clone o repositório
 git clone https://github.com/LcsAlmeidaS/InventoryAnalyzerAPI.git
-cd InventoryAnalyzerAPI
+cd InventoryAnalyzerAPI/InventoryAnalyzerAPI
 
-# Restaure as dependências
+# Restaure as dependências e execute
 dotnet restore
-
-# Execute a aplicação
-dotnet run --project InventoryAnalyzerAPI
+dotnet run
 ```
 
-A API estará disponível em `https://localhost:7000` (ou na porta exibida no terminal).
+A API estará disponível na porta exibida no terminal, geralmente `http://localhost:5122`.
 
-O Swagger UI estará acessível em `https://localhost:7000/swagger` ao executar no modo Development.
+O Swagger UI estará acessível em `http://localhost:5122/swagger` ao executar no modo Development.
+
+### Frontend
+
+Em um novo terminal:
+
+```bash
+cd InventoryAnalyzerWeb
+
+# Instale as dependências
+npm install
+
+# Execute o servidor de desenvolvimento
+npm run dev
+```
+
+O frontend estará disponível em `http://localhost:5173` e se comunica automaticamente com o backend via proxy configurado no `vite.config.ts`.
+
+> **Atenção:** certifique-se de que o backend está rodando antes de usar o frontend.
 
 ---
 
@@ -111,7 +162,7 @@ Faz o upload de um arquivo CSV e retorna a análise completa do estoque.
 **Exemplo (curl)**
 
 ```bash
-curl -X POST https://localhost:7000/api/inventory/analyze \
+curl -X POST http://localhost:5122/api/inventory/analyze \
   -F "file=@movimentacoes.csv;type=text/csv"
 ```
 
@@ -203,4 +254,18 @@ builder.Services.Configure<FormOptions>(options =>
 });
 ```
 
-Para aumentar ou diminuir o limite, altere esse valor antes de testar.
+Para aumentar ou diminuir o limite, altere esse valor antes de usar.
+
+### Proxy do frontend
+
+A URL do backend é configurada no `vite.config.ts`. Caso a porta do backend mude, atualize o campo `target`:
+
+```ts
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:5122',
+    },
+  },
+},
+```
