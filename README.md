@@ -203,4 +203,4 @@ builder.Services.Configure<FormOptions>(options =>
 });
 ```
 
-Para aumentar ou diminuir o limite, altere esse valor antes de fazer o deploy.
+Para aumentar ou diminuir o limite, altere esse valor antes de testar.
