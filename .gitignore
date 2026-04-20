@@ -1,3 +1,4 @@
+```ignore
 # Build folders
 bin/
 obj/
@@ -11,6 +12,10 @@ obj/
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # User-specific files
 *.user
@@ -26,6 +31,10 @@ Thumbs.db
 
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # ASP.NET Core
 appsettings.Development.json
@@ -47,8 +56,12 @@ packages/
 # Coverage reports
 coverage/
 
-# Node modules (caso tenha frontend no futuro)
+# Frontend - Node modules
 node_modules/
+
+# Frontend - Build output
+dist/
+dist-ssr/
 
 # Backup files
 *.bak
@@ -60,3 +73,4 @@ node_modules/
 *.db
 *.sqlite
 *.sqlite3
+```
