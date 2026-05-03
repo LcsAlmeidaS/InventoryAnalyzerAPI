@@ -1,3 +1,4 @@
+using InventoryAnalyzerAPI.DTOs;
 using InventoryAnalyzerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,13 +21,21 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("analyze")]
+    [ProducesResponseType(typeof(InventoryAnalysisResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Analyze(IFormFile file)
     {
         if (file == null || file.Length == 0)
-            return BadRequest("Invalid CSV file.");
+            return Problem(
+                title: "Invalid file.",
+                detail: "No file was provided or the file is empty.",
+                statusCode: StatusCodes.Status400BadRequest);
 
         if (!IsCsvFile(file))
-            return BadRequest("Only CSV files are allowed.");
+            return Problem(
+                title: "Invalid file type.",
+                detail: "Only CSV files are allowed. Accepted content types: text/csv, application/csv, text/plain.",
+                statusCode: StatusCodes.Status400BadRequest);
 
         var records = await _parser.ParseAsync(file);
         var result = _inventoryService.Analyze(records);
