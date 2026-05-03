@@ -12,7 +12,7 @@ public class InventoryService : IInventoryService
         { MovementType.Out, -1 }
     };
 
-    public InventoryAnalysisResultDto Analyze(IEnumerable<InventoryRecordDto> records)
+    public InventoryAnalysisResultDto Analyze(IReadOnlyList<InventoryRecordDto> records)
     {
         var stock = new Dictionary<string, int>();
         var names = new Dictionary<string, string>();

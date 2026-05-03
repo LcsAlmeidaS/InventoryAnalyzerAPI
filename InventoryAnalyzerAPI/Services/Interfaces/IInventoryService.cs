@@ -4,5 +4,5 @@ namespace InventoryAnalyzerAPI.Services.Interfaces;
 
 public interface IInventoryService
 {
-    InventoryAnalysisResultDto Analyze(IEnumerable<InventoryRecordDto> records);
+    InventoryAnalysisResultDto Analyze(IReadOnlyList<InventoryRecordDto> records);
 }

@@ -4,5 +4,5 @@ namespace InventoryAnalyzerAPI.Services.Interfaces;
 
 public interface ICsvParseService
 {
-    Task<List<InventoryRecordDto>> ParseAsync(IFormFile file);
+    Task<IReadOnlyList<InventoryRecordDto>> ParseAsync(IFormFile file);
 }
