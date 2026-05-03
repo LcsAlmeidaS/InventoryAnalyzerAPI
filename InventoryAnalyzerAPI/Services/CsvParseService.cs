@@ -9,7 +9,7 @@ namespace InventoryAnalyzerAPI.Services;
 
 public class CsvParseService : ICsvParseService
 {
-    public async Task<List<InventoryRecordDto>> ParseAsync(IFormFile file)
+    public async Task<IReadOnlyList<InventoryRecordDto>> ParseAsync(IFormFile file)
     {
         using var csv = CreateCsvReader(file);
         return await ReadRecordsAsync(csv);
@@ -52,12 +52,16 @@ public class CsvParseService : ICsvParseService
             return null;
 
         var productId = csv.GetField(1);
-        var productName = csv.GetField(2);
+
+        if (string.IsNullOrWhiteSpace(productId))
+            return null;
+
+        var productName = csv.GetField(2) ?? string.Empty;
 
         if (!Enum.TryParse<MovementType>(csv.GetField(3), true, out var type))
             return null;
 
-        if (!int.TryParse(csv.GetField(4), out var quantity))
+        if (!int.TryParse(csv.GetField(4), out var quantity) || quantity <= 0)
             return null;
 
         return new InventoryRecordDto
