@@ -24,10 +24,23 @@ export function UploadZone({ onFileSelect, isLoading }: UploadZoneProps) {
     }
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (!isLoading && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      inputRef.current?.click()
+    }
+  }
+
   return (
     <div
+      role="button"
+      tabIndex={isLoading ? -1 : 0}
+      aria-label="Área de upload de arquivo CSV. Clique ou pressione Enter para selecionar um arquivo."
+      aria-busy={isLoading}
+      aria-disabled={isLoading}
       className={`upload-zone ${isDragging ? 'dragging' : ''} ${isLoading ? 'loading' : ''}`}
       onClick={() => !isLoading && inputRef.current?.click()}
+      onKeyDown={handleKeyDown}
       onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
