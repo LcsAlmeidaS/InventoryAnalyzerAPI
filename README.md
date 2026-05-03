@@ -24,7 +24,9 @@ Uma API RESTful desenvolvida com **ASP.NET Core** para análise de movimentaçõ
 - Cálculo da quantidade final de estoque por produto
 - Detecção e reporte de anomalias (ex: estoque ficando negativo)
 - Informa o menor nível de estoque atingido quando uma anomalia ocorre
-- Validação de tipo e tamanho do arquivo antes do processamento
+- Validação de tipo e tamanho do arquivo no lado do cliente, antes do envio
+- Validação de tipo e tamanho do arquivo no lado do servidor, antes do processamento
+- Respostas de erro padronizadas no formato `ProblemDetails` (RFC 7807)
 - Swagger UI disponível no ambiente de desenvolvimento
 - Interface web com dark mode para visualização dos resultados
 - Suporte a drag and drop para upload do arquivo CSV
@@ -74,7 +76,8 @@ InventoryAnalyzerAPI/
 │   │   ├── CsvParseService.cs                    # Implementação do parse de CSV
 │   │   └── InventoryService.cs                   # Lógica de análise de estoque
 │   ├── Program.cs                                # Bootstrap da aplicação e configuração de DI
-│   └── appsettings.json
+│   ├── appsettings.json                          # Configurações gerais (CORS, upload limit)
+│   └── appsettings.Development.json              # Overrides de logging para desenvolvimento
 │
 └── InventoryAnalyzerWeb/                         # Projeto frontend
     ├── src/
@@ -88,12 +91,15 @@ InventoryAnalyzerAPI/
     │   │   └── inventoryService.ts               # Chamada para a API com Axios
     │   ├── types/
     │   │   └── index.ts                          # Tipos TypeScript espelhando os DTOs do backend
+    │   ├── vite-env.d.ts                         # Declaração de tipos das variáveis de ambiente Vite
     │   ├── App.tsx
     │   ├── main.tsx
     │   └── index.css                             # Tema dark com CSS variables
+    ├── .env.development                          # Variáveis de ambiente para desenvolvimento
+    ├── .env.example                              # Documentação das variáveis de ambiente
     ├── index.html
     ├── package.json
-    ├── vite.config.ts                            # Proxy configurado para o backend
+    ├── vite.config.ts                            # Proxy configurado via variável de ambiente
     └── tsconfig.json
 ```
 
@@ -183,12 +189,12 @@ Timestamp,ProductId,ProductName,Type,Quantity
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `Timestamp` | `long` | Timestamp Unix da movimentação |
-| `ProductId` | `string` | Identificador único do produto |
+| `ProductId` | `string` | Identificador único do produto — não pode ser vazio |
 | `ProductName` | `string` | Nome legível do produto |
 | `Type` | `string` | Direção da movimentação: `In` ou `Out` (sem distinção de maiúsculas) |
-| `Quantity` | `int` | Quantidade de unidades movimentadas |
+| `Quantity` | `int` | Quantidade de unidades movimentadas — deve ser maior que zero |
 
-> **Observação:** Campos que contenham vírgulas devem estar entre aspas duplas (tratado automaticamente pelo CsvHelper).
+> **Observação:** linhas com `ProductId` vazio ou `Quantity` menor ou igual a zero são descartadas silenciosamente. Campos que contenham vírgulas devem estar entre aspas duplas (tratado automaticamente pelo CsvHelper).
 
 ---
 
@@ -229,43 +235,61 @@ Timestamp,ProductId,ProductName,Type,Quantity
 
 ## ⚠️ Tratamento de Erros
 
+Todos os erros seguem o formato `ProblemDetails` (RFC 7807):
+
 | Status | Condição |
 |---|---|
 | `400 Bad Request` | Nenhum arquivo enviado, arquivo vazio, extensão incorreta ou tipo de conteúdo inválido |
+| `500 Internal Server Error` | Erro inesperado no servidor |
 
 **Exemplo de resposta de erro**
 
 ```json
-"Only CSV files are allowed."
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Invalid file type.",
+  "detail": "Only CSV files are allowed. Accepted content types: text/csv, application/csv, text/plain.",
+  "status": 400
+}
 ```
 
 ---
 
 ## ⚙️ Configuração
 
-### Limite de tamanho de upload
+### Backend
 
-O tamanho máximo de upload permitido é configurado no `Program.cs` via `FormOptions`:
+As principais configurações ficam no `appsettings.json`:
 
-```csharp
-builder.Services.Configure<FormOptions>(options =>
+```json
 {
-    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
-});
+  "Cors": {
+    "AllowedOrigins": [ "http://localhost:5173" ]
+  },
+  "Upload": {
+    "MaxFileSizeBytes": 10485760
+  }
+}
 ```
 
-Para aumentar ou diminuir o limite, altere esse valor antes de usar.
+Para alterar as origens permitidas no CORS ou o limite de tamanho de upload, edite esses campos — não é necessário recompilar.
 
-### Proxy do frontend
+### Frontend
 
-A URL do backend é configurada no `vite.config.ts`. Caso a porta do backend mude, atualize o campo `target`:
+As variáveis de ambiente do frontend ficam no arquivo `.env.development` (desenvolvimento) ou em variáveis definidas na plataforma de deploy (produção). Copie `.env.example` como ponto de partida:
 
-```ts
-server: {
-  proxy: {
-    '/api': {
-      target: 'http://localhost:5122',
-    },
-  },
-},
+```bash
+cp .env.example .env.development
+```
+
+| Variável | Descrição |
+|---|---|
+| `VITE_API_URL` | URL base da API consumida pelo frontend. Em dev use `/api` (roteado pelo proxy do Vite). Em produção, use a URL pública completa. |
+| `BACKEND_URL` | URL do backend usada pelo proxy do Vite em desenvolvimento. Altere se a porta do backend mudar. |
+
+**Exemplo de `.env.development`**
+
+```
+VITE_API_URL=/api
+BACKEND_URL=http://localhost:5122
 ```
