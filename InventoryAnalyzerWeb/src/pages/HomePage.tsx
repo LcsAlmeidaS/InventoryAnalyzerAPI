@@ -5,15 +5,28 @@ import { AnomaliesList } from '../components/AnomaliesList'
 import { analyzeInventory } from '../services/inventoryService'
 import type { AnalysisResult } from '../types'
 
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+
 export function HomePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleFileSelect(file: File) {
-    setIsLoading(true)
     setError(null)
     setResult(null)
+
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+      setError('Apenas arquivos .csv são aceitos.')
+      return
+    }
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError('O arquivo deve ter no máximo 10 MB.')
+      return
+    }
+
+    setIsLoading(true)
 
     try {
       const data = await analyzeInventory(file)
