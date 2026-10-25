@@ -1,0 +1,123 @@
+Timestamp,ProductId,ProductName,Type,Quantity
+1710000000,P001,Parafuso 3/4 Inox,In,500
+1710000100,P002,Porca M8 Galvanizada,In,300
+1710000200,P003,Arruela Lisa 10mm,In,1000
+1710000300,P004,Chave de Fenda Phillips,In,150
+1710000400,P005,Martelo Tramontina 27mm,In,80
+1710000500,P006,Alicate Universal 8",In,120
+1710000600,P007,Fita Isolante Preta,In,400
+1710000700,P008,Luva Nitrílica M,In,600
+1710000800,P009,Capacete de Segurança,In,200
+1710000900,P010,Óculos de Proteção,In,250
+1710001000,P011,Disco de Corte 7",In,350
+1710001100,P012,Broca HSS 6mm,In,180
+1710001200,P013,Rebite Pop 4mm,In,800
+1710001300,P014,Abraçadeira Nylon 20cm,In,500
+1710001400,P015,Mangueira PVC 1/2",In,300
+1710001500,P001,Parafuso 3/4 Inox,Out,120
+1710001600,P002,Porca M8 Galvanizada,Out,80
+1710001700,P003,Arruela Lisa 10mm,Out,200
+1710001800,P004,Chave de Fenda Phillips,Out,30
+1710001900,P005,Martelo Tramontina 27mm,Out,15
+1710002000,P006,Alicate Universal 8",Out,40
+1710002100,P007,Fita Isolante Preta,Out,100
+1710002200,P008,Luva Nitrílica M,Out,150
+1710002300,P009,Capacete de Segurança,Out,50
+1710002400,P010,Óculos de Proteção,Out,60
+1710002500,P011,Disco de Corte 7",Out,90
+1710002600,P012,Broca HSS 6mm,Out,45
+1710002700,P013,Rebite Pop 4mm,Out,200
+1710002800,P014,Abraçadeira Nylon 20cm,Out,120
+1710002900,P015,Mangueira PVC 1/2",Out,80
+1710003000,P001,Parafuso 3/4 Inox,In,200
+1710003100,P002,Porca M8 Galvanizada,In,100
+1710003200,P003,Arruela Lisa 10mm,In,400
+1710003300,P004,Chave de Fenda Phillips,In,50
+1710003400,P005,Martelo Tramontina 27mm,In,20
+1710003500,P006,Alicate Universal 8",Out,90
+1710003600,P007,Fita Isolante Preta,Out,150
+1710003700,P008,Luva Nitrílica M,In,200
+1710003800,P009,Capacete de Segurança,Out,80
+1710003900,P010,Óculos de Proteção,In,100
+1710004000,P011,Disco de Corte 7",In,150
+1710004100,P012,Broca HSS 6mm,In,60
+1710004200,P013,Rebite Pop 4mm,Out,300
+1710004300,P014,Abraçadeira Nylon 20cm,In,200
+1710004400,P015,Mangueira PVC 1/2",Out,100
+1710004500,P001,Parafuso 3/4 Inox,Out,300
+1710004600,P002,Porca M8 Galvanizada,Out,200
+1710004700,P003,Arruela Lisa 10mm,Out,500
+1710004800,P004,Chave de Fenda Phillips,Out,100
+1710004900,P005,Martelo Tramontina 27mm,Out,60
+1710005000,P006,Alicate Universal 8",Out,30
+1710005100,P007,Fita Isolante Preta,In,300
+1710005200,P008,Luva Nitrílica M,Out,400
+1710005300,P009,Capacete de Segurança,In,100
+1710005400,P010,Óculos de Proteção,Out,200
+1710005500,P011,Disco de Corte 7",Out,200
+1710005600,P012,Broca HSS 6mm,Out,100
+1710005700,P013,Rebite Pop 4mm,In,500
+1710005800,P014,Abraçadeira Nylon 20cm,Out,300
+1710005900,P015,Mangueira PVC 1/2",In,200
+1710006000,P016,Serra Circular 7-1/4",In,40
+1710006100,P017,Furadeira de Impacto,In,25
+1710006200,P018,Nível de Bolha 60cm,In,60
+1710006300,P019,Trena Metálica 5m,In,90
+1710006400,P020,Escada Alumínio 6 Degraus,In,15
+1710006500,P001,Parafuso 3/4 Inox,Out,400
+1710006600,P002,Porca M8 Galvanizada,Out,150
+1710006700,P003,Arruela Lisa 10mm,Out,800
+1710006800,P016,Serra Circular 7-1/4",Out,10
+1710006900,P017,Furadeira de Impacto,Out,8
+1710007000,P018,Nível de Bolha 60cm,Out,20
+1710007100,P019,Trena Metálica 5m,Out,30
+1710007200,P020,Escada Alumínio 6 Degraus,Out,5
+1710007300,P004,Chave de Fenda Phillips,In,30
+1710007400,P005,Martelo Tramontina 27mm,Out,30
+1710007500,P006,Alicate Universal 8",In,50
+1710007600,P007,Fita Isolante Preta,Out,200
+1710007700,P008,Luva Nitrílica M,In,300
+1710007800,P009,Capacete de Segurança,Out,180
+1710007900,P010,Óculos de Proteção,Out,100
+1710008000,P011,Disco de Corte 7",Out,220
+1710008100,P012,Broca HSS 6mm,Out,80
+1710008200,P013,Rebite Pop 4mm,Out,400
+1710008300,P014,Abraçadeira Nylon 20cm,Out,280
+1710008400,P015,Mangueira PVC 1/2",Out,250
+1710008500,P016,Serra Circular 7-1/4",In,20
+1710008600,P017,Furadeira de Impacto,In,10
+1710008700,P018,Nível de Bolha 60cm,In,30
+1710008800,P019,Trena Metálica 5m,In,50
+1710008900,P020,Escada Alumínio 6 Degraus,Out,12
+1710009000,P001,Parafuso 3/4 Inox,In,100
+1710009100,P002,Porca M8 Galvanizada,In,50
+1710009200,P003,Arruela Lista 10mm,In,200
+1710009300,P021,Cimento CP II 50kg,In,100
+1710009400,P022,Areia Média Saco 20kg,In,200
+1710009500,P023,Brita 1 Saco 20kg,In,150
+1710009600,P024,Tinta Acrílica Branca 18L,In,30
+1710009700,P025,Rolo de Lã 23cm,In,80
+1710009800,P021,Cimento CP II 50kg,Out,40
+1710009900,P022,Areia Média Saco 20kg,Out,80
+1710010000,P023,Brita 1 Saco 20kg,Out,60
+1710010100,P024,Tinta Acrílica Branca 18L,Out,12
+1710010200,P025,Rolo de Lã 23cm,Out,30
+1710010300,P005,Martelo Tramontina 27mm,Out,10
+1710010400,P008,Luva Nitrílica M,Out,200
+1710010500,P009,Capacete de Segurança,Out,100
+1710010600,P021,Cimento CP II 50kg,Out,80
+1710010700,P022,Areia Média Saco 20kg,Out,150
+1710010800,P023,Brita 1 Saco 20kg,Out,100
+1710010900,P024,Tinta Acrílica Branca 18L,Out,25
+1710011000,P025,Rolo de Lã 23cm,Out,60
+1710011100,P010,Óculos de Proteção,Out,50
+1710011200,P011,Disco de Corte 7",Out,100
+1710011300,P012,Broca HSS 6mm,Out,30
+1710011400,P013,Rebite Pop 4mm,Out,200
+1710011500,P014,Abraçadeira Nylon 20cm,Out,100
+1710011600,P015,Mangueira PVC 1/2",Out,80
+1710011700,P016,Serra Circular 7-1/4",Out,15
+1710011800,P017,Furadeira de Impacto,Out,20
+1710011900,P018,Nível de Bolha 60cm,Out,40
+1710012000,P019,Trena Metálica 5m,Out,80
+1710012100,P020,Escada Alumínio 6 Degraus,Out,10
