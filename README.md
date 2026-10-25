@@ -107,12 +107,33 @@ InventoryAnalyzerAPI/
 
 ## 🚀 Como Executar
 
-### Pré-requisitos
+### Com Docker (recomendado)
+
+Pré-requisito: [Docker](https://docs.docker.com/get-docker/) com Docker Compose.
+
+```bash
+docker compose up -d --build
+```
+
+| Serviço | URL |
+|---|---|
+| Frontend | `http://localhost:3000` |
+| API | `http://localhost:5122` |
+
+O container do frontend serve o build estático via **nginx**, que também encaminha `/api` para o container da API — por isso não é necessário configurar CORS nesse cenário. Para parar os containers:
+
+```bash
+docker compose down
+```
+
+### Sem Docker
+
+#### Pré-requisitos
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Node.js 18+](https://nodejs.org)
 
-### Backend
+#### Backend
 
 ```bash
 # Clone o repositório
@@ -128,7 +149,7 @@ A API estará disponível na porta exibida no terminal, geralmente `http://local
 
 O Swagger UI estará acessível em `http://localhost:5122/swagger` ao executar no modo Development.
 
-### Frontend
+#### Frontend
 
 Em um novo terminal:
 
